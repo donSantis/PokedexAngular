@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PikeApi.DTO\PikeApi.DTO.csproj" />
+    <ProjectReference Include="..\PokeApi.DAL\PokeApi.DAL.csproj" />
+    <ProjectReference Include="..\PokeApi.Model\PokeApi.Model.csproj" />
+    <ProjectReference Include="..\PokeApi.Utility\PokeApi.Utility.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Services\Contract\"/>
+	</ItemGroup>
+
+</Project>

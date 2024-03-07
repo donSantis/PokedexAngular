@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PokeApi.BLL\PokeApi.BLL.csproj" />
+    <ProjectReference Include="..\PokeApi.DAL\PokeApi.DAL.csproj" />
+    <ProjectReference Include="..\PokeApi.Utility\PokeApi.Utility.csproj" />
+  </ItemGroup>
+
+</Project>
