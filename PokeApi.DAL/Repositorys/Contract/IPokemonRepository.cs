@@ -10,5 +10,7 @@ namespace PokeApi.DAL.Repositorys.Contract
     public interface IPokemonRepository : IGenericRepository<Pokemon>
     {
         Task<Pokemon> Register(Pokemon model);
+        Task<string> ListAllFirstGenerationPkmn(); // Agrega esta definición al método
+
     }
 }

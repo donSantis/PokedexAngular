@@ -9,19 +9,24 @@ using PikeApi.DTO;
 using PokeApi.Model;
 using PokeApi.BLL.Services.Contract;
 using Microsoft.EntityFrameworkCore;
+using PokeApi.DAL.Repositorys;
 
 namespace PokeApi.BLL.Services
 {
     public class PokemonService : IPokemonService
     {
         private readonly IGenericRepository<Pokemon> _pokemonRepository;
+        private readonly IPokemonRepository _pokemonRepository2;
         private readonly IMapper _mapper;
 
-        public PokemonService(IGenericRepository<Pokemon> pokemonRepository, IMapper mapper)
+        public PokemonService(IGenericRepository<Pokemon> pokemonRepository, IPokemonRepository pokemonRepository2, IMapper mapper)
         {
             _pokemonRepository = pokemonRepository;
+            _pokemonRepository2 = pokemonRepository2;
             _mapper = mapper;
         }
+
+ 
 
         public async Task<Pokemon_DTO> Create(Pokemon_DTO model)
         {
@@ -61,6 +66,20 @@ namespace PokeApi.BLL.Services
 
            }
             catch {
+                throw;
+            }
+        }
+
+        public async Task<string> ListAllFirstGenerationPkmn()
+        {
+            try
+            {
+                var uwu = await _pokemonRepository2.ListAllFirstGenerationPkmn();
+                return uwu;
+
+            }
+            catch
+            {
                 throw;
             }
         }

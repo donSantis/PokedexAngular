@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using PokeApi.DAL.DBContext;
@@ -12,10 +13,37 @@ namespace PokeApi.DAL.Repositorys
     public class PokemonRepository : GenericRepository<Pokemon>, IPokemonRepository
     {
         private readonly PokedexdbContext _dbContext;
+        private readonly HttpClient _httpClient;
 
         public PokemonRepository(PokedexdbContext dbContext) : base(dbContext) 
         {
             _dbContext = dbContext;
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri("https://pokeapi.co/api/v2/");
+        }
+
+        public async Task<string> ListAllFirstGenerationPkmn()
+        {
+            try
+            {
+                // Construye la URL completa utilizando el BaseAddress y la ruta relativa
+                var url = $"{_httpClient.BaseAddress}pokemon";
+
+                // Realiza la solicitud GET utilizando el HttpClient
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                // Lee el contenido de la respuesta como una cadena
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // Retornar los datos obtenidos
+                return responseBody;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error al hacer la solicitud HTTP: {ex.Message}");
+                throw;
+            }
         }
 
         public async Task<Pokemon> Register(Pokemon model)

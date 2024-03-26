@@ -38,6 +38,25 @@ namespace PokeApi.API.Controllers
             return Ok(rsp);
         }
 
+        [HttpGet]
+        [Route("List2")]
+        public async Task<IActionResult> List2()
+        {
+            var rsp = new ResponseString();
+            try
+            {
+               
+             rsp.rsp = await  _pokeService.ListAllFirstGenerationPkmn();
+
+            }
+            catch (Exception ex)
+            {
+ 
+
+            }
+            return Ok(rsp);
+        }
+
 
         [HttpPost]
         [Route("CreatePokemon")]

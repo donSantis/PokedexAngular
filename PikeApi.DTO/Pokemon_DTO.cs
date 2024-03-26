@@ -8,6 +8,7 @@ namespace PikeApi.DTO
 {
     public class Pokemon_DTO
     {
+        public int? IdPokemon { get; set; }
 
         public int? IdPokemonApi { get; set; }
 

@@ -26,7 +26,7 @@ namespace PokeApi.Utility
             CreateMap<User, User_DTO>()
                 .ForMember(d => 
                     d.Rol,
-                    opt => opt.MapFrom(o => o.IdRolNavigation))
+                    opt => opt.MapFrom(o => o.IdRolNavigation.Name))
                 .ForMember(d => 
                     d.Status,
                     opt => opt.MapFrom(o => o.Status == true ? 1 : 0)
@@ -35,7 +35,7 @@ namespace PokeApi.Utility
             CreateMap<User, Sesion_DTO>()
                 .ForMember(d =>
                     d.Rol,
-                    opt => opt.MapFrom(o => o.IdRolNavigation)
+                    opt => opt.MapFrom(o => o.IdRolNavigation.Name)
                 );
             CreateMap<User_DTO, User>()
                 .ForMember(d =>
@@ -43,7 +43,7 @@ namespace PokeApi.Utility
                     opt => opt.Ignore())
                 .ForMember( d =>
                     d.Status,
-                    opt => opt.MapFrom(o => o.Status == true? true : false)
+                    opt => opt.MapFrom(o => o.Status == 1? true:false)
                 );
             #endregion User
             #region Pokemon

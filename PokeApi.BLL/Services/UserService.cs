@@ -82,12 +82,12 @@ namespace PokeApi.BLL.Services
                 var userFind = await _userRepository.GetModel(u => u.IdUser == userModel.IdUser);
                 if(userFind == null)
                     throw new TaskCanceledException("El usuario no existe");
-                userFind.Name = model.Name;
-                userFind.SecondName = model.SecondName;
-                userFind.Email = model.Email;
-                userFind.IdRol = model.IdRol;
-                userFind.Password = model.Password;
-                userFind.Status = model.Status;
+                userFind.Name = userModel.Name;
+                userFind.SecondName = userModel.SecondName;
+                userFind.Email = userModel.Email;
+                userFind.IdRol = userModel.IdRol;
+                userFind.Password = userModel.Password;
+                userFind.Status = userModel.Status;
                 bool response = await _userRepository.EditModel(userFind);
                 if (!response)
                     throw new TaskCanceledException("No se han realizado cambios al usuario");

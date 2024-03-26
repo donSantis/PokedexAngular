@@ -14,6 +14,7 @@ namespace PokeApi.BLL.Services.Contract
         Task<Pokemon_DTO> Create(Pokemon_DTO model);
         Task<bool> update(Pokemon_DTO model);
         Task<bool> Delete(int id);
+        Task<string> ListAllFirstGenerationPkmn();
 
     }
 }
