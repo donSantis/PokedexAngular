@@ -88,14 +88,11 @@ public partial class PokedexdbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("evolution3");
             entity.Property(e => e.IdPokemonApi).HasColumnName("idPokemonApi");
-            entity.Property(e => e.Name)
+            entity.Property(e => e.name)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("type");
+
         });
 
         modelBuilder.Entity<Rol>(entity =>

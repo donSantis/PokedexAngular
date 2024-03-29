@@ -9,7 +9,7 @@ namespace PokeApi.DAL.Repositorys.Contract
 {
     public interface IPokePublicApiRepository : IGenericRepository<Pokemon>
     {
-        Task<Pokemon> getAll();
+        Task<string> getAll();
         Task<string> ListAllFirstGenerationPkmn();
 
     }

@@ -29,6 +29,7 @@ namespace PokeApi.IOC
 
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IPokemonRepository, PokemonRepository>();
+            services.AddScoped<IPokePublicApiRepository, PokePublicApiRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 

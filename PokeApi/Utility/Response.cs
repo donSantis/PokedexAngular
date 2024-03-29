@@ -21,10 +21,6 @@
     public class ResponseString
     {
         public string rsp { get; set; }
-
-        public static implicit operator ResponseString(string v)
-        {
-            throw new NotImplementedException();
-        }
     }
+  
 }

@@ -5,6 +5,8 @@ using PokeApi.BLL.Services.Contract;
 using PikeApi.DTO;
 using PokeApi.API.Utility;
 using PokeApi.Model;
+using Newtonsoft.Json;
+
 
 namespace PokeApi.API.Controllers
 {
@@ -28,6 +30,7 @@ namespace PokeApi.API.Controllers
             {
                 rsp.Status = true;
                 rsp.Value = await _pokeService.List();
+
             }
             catch (Exception ex)
             {
