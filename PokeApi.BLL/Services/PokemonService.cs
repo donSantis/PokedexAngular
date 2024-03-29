@@ -14,6 +14,7 @@ using PokeApi.DAL.Repositorys;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 
 namespace PokeApi.BLL.Services
 {
@@ -23,6 +24,7 @@ namespace PokeApi.BLL.Services
         private readonly IPokePublicApiRepository _pokePublicApiRepository;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
+        private readonly string _urlApiPublicPokemonById = "https://pokeapi.co/api/v2/pokemon/";
 
 
         public PokemonService(IGenericRepository<Pokemon> pokemonRepository, IPokePublicApiRepository pokePublicApiRepository, IMapper mapper)
@@ -144,6 +146,8 @@ namespace PokeApi.BLL.Services
                 {
                     // Crear una lista para almacenar los pokemones
                     List<PokemonApiResponse> pokemonesApiResponse = new List<PokemonApiResponse>();
+                    List<PokemonApiResponse> pokemonSpeciesApiResponse = new List<PokemonApiResponse>();
+
                     List<Pokemon> pokemones = new List<Pokemon>();
 
 
@@ -157,10 +161,8 @@ namespace PokeApi.BLL.Services
                         int idFromUrl = this.GetPokemonNumberFromURL(result.url);
                         pokemonTasks.Add(GetPokemonDataFromURL(result.url));
                     }
-
                     // Esperar a que todas las tareas de obtención de datos del Pokémon se completen
                     await Task.WhenAll(pokemonTasks);
-
                     // Agregar los pokemones obtenidos a la lista de pokemones
                     foreach (var pokemonTask in pokemonTasks)
                     {
@@ -231,14 +233,149 @@ namespace PokeApi.BLL.Services
         {
             try
             {
+                PokemonApiResponse SecondEvolutionPokemonData = new();
+                PokemonApiResponse ThirdEvolutionPokemonData = new();
+
+                if (url != null)
+                {
+                    PokemonApiResponse getFirstData = await GetPokemonDataByUrl(url);
+                    PokemonApiResponse getSecondData = await GetPokemonDataByUrl(getFirstData.species.url);
+                    PokemonApiResponse getThirdData = await GetPokemonDataByUrl(getSecondData.evolutionChain.url);
+                    PokemonApiResponse FirstPokemonData = new PokemonApiResponse
+                    {
+                        id = getFirstData.id,
+                        name = getFirstData.name,
+                        weight = getFirstData.weight,
+                        types = getFirstData.types,
+                        sprites = getFirstData.sprites,
+                        species = getFirstData.species,
+                        //chain = pokemonData3.chain
+                        evolutionChain = getSecondData.evolutionChain,// Aquí se mantiene el officialArtwork del primer objeto
+                        chain = getThirdData.chain,
+                        Evolution2 = ThirdEvolutionPokemonData,
+                        Evolution3 = SecondEvolutionPokemonData,
+                        //firstEvolution = pokemonData3.chain.EvolveTo.species.name
+                        // ... agregar otros campos según sea necesario
+                    };
+
+                    if (getThirdData.chain.EvolveTo[0].species.url != null)
+                    {
+                        int idPokemonEvolution = GetPokemonNumberFromURL(getThirdData.chain.EvolveTo[0].species.url);
+                        PokemonApiResponse getFirstData2 = await GetPokemonDataByUrl(_urlApiPublicPokemonById + idPokemonEvolution);
+                        PokemonApiResponse getSecondData2 = await GetPokemonDataByUrl(getThirdData.chain.EvolveTo[0].species.url);
+                        PokemonApiResponse getThirdData2 = await GetPokemonDataByUrl(getSecondData2.evolutionChain.url);
+
+                        SecondEvolutionPokemonData = new PokemonApiResponse
+                        {
+                            id = getFirstData2.id,
+                            name = getFirstData2.name,
+                            weight = getFirstData2.weight,
+                            types = getFirstData2.types,
+                            sprites = getFirstData2.sprites,
+                            species = getFirstData2.species,
+                            //chain = pokemonData3.chain
+                            evolutionChain = getSecondData2.evolutionChain,// Aquí se mantiene el officialArtwork del primer objeto
+                            chain = getThirdData2.chain,
+                            Evolution1 = ThirdEvolutionPokemonData,
+
+                            //firstEvolution = pokemonData3.chain.EvolveTo.species.name
+                            // ... agregar otros campos según sea necesario
+                        };
+
+                        FirstPokemonData.Evolution2 = SecondEvolutionPokemonData;
+
+                        if (getThirdData.chain.EvolveTo[0].EvolveToPlus[0].species.url != null)
+                        {
+                            int idPokemonEvolution2 = GetPokemonNumberFromURL(getThirdData.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                            PokemonApiResponse getFirstData3 = await GetPokemonDataByUrl(_urlApiPublicPokemonById + idPokemonEvolution2);
+                            PokemonApiResponse getSecondData3 = await GetPokemonDataByUrl(getThirdData.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                            PokemonApiResponse getThirdData3 = await GetPokemonDataByUrl(getSecondData3.evolutionChain.url);
+
+                            ThirdEvolutionPokemonData = new PokemonApiResponse
+                            {
+                                id = getFirstData3.id,
+                                name = getFirstData3.name,
+                                weight = getFirstData3.weight,
+                                types = getFirstData3.types,
+                                sprites = getFirstData3.sprites,
+                                species = getFirstData3.species,
+                                //chain = pokemonData3.chain
+                                evolutionChain = getSecondData3.evolutionChain,// Aquí se mantiene el officialArtwork del primer objeto
+                                chain = getThirdData3.chain,
+                                Evolution1 = ThirdEvolutionPokemonData,
+                                Evolution2 = ThirdEvolutionPokemonData,
+
+                                //firstEvolution = pokemonData3.chain.EvolveTo.species.name
+                                // ... agregar otros campos según sea necesario
+                            };
+                            FirstPokemonData.Evolution3 = ThirdEvolutionPokemonData;
+
+                        }
+
+                    }
+
+                    PokemonApiResponse uwu = await SetPokemonData(url);
+                    PokemonApiResponse uwu4 = new();
+                    PokemonApiResponse uwu5 = new();
+                    PokemonApiResponse pokemonBase = new();
+                    PokemonApiResponse pokemonFirstEvolution = new();
+                    PokemonApiResponse pokemonSecondEvolution = new();
+
+
+
+
+                    int uwu2 = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].species.url);
+                    int uwu3 = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+
+                    if (uwu.EvolveFrom == null)
+                    {
+                        pokemonBase = uwu;
+                        pokemonFirstEvolution = await SetSecondEvolutionPokemonData(pokemonBase);
+                        pokemonSecondEvolution = await SetThirdEvolutionPokemonData(pokemonBase);
+
+                    }
+                    if (uwu.evolutionChain != null && uwu.id ==  uwu2 && uwu.id < uwu3)
+                    {
+                        pokemonBase = await SetPokemonData(uwu.EvolveFrom.url);
+                        pokemonFirstEvolution = await SetSecondEvolutionPokemonData(pokemonBase);
+                        pokemonSecondEvolution = await SetThirdEvolutionPokemonData(pokemonBase);
+                    }
+                    if (uwu.evolutionChain != null && uwu.id > uwu2 && uwu.id == uwu3 || uwu.evolutionChain != null && uwu.id >= uwu2 && uwu.id > uwu3)
+                    {
+                        pokemonFirstEvolution = await SetPokemonData(uwu.EvolveFrom.url); ;
+                        pokemonBase = await SetPokemonData(pokemonFirstEvolution.EvolveFrom.url);
+                        pokemonSecondEvolution = await SetThirdEvolutionPokemonData(pokemonBase);
+                    }
+
+
+
+
+
+                    return FirstPokemonData;
+                }
+                else
+                {
+                    throw new HttpRequestException($"La solicitud a {url} no fue exitosa. Código de estado: ");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener los datos del Pokémon: " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<PokemonApiResponse> GetPokemonDataByUrl(string url)
+        {
+            try
+            {
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
                 {
                     string responseData = await response.Content.ReadAsStringAsync();
-                    responseData = responseData.Replace("official-artwork:", "officialArtwork:");
-                    PokemonApiResponse pokemonData = JsonConvert.DeserializeObject<PokemonApiResponse>(responseData);
-                    return pokemonData;
+                    PokemonApiResponse pokemon = JsonConvert.DeserializeObject<PokemonApiResponse>(responseData);
+                    return pokemon;
                 }
                 else
                 {
@@ -252,7 +389,94 @@ namespace PokeApi.BLL.Services
             }
         }
 
+        public async Task<PokemonApiResponse> SetPokemonData(string url)
+        {
+            try
+            {
+                PokemonApiResponse getFirstData = await GetPokemonDataByUrl(url);
+                PokemonApiResponse getSecondData = await GetPokemonDataByUrl(getFirstData.species.url);
+                PokemonApiResponse getThirdData = await GetPokemonDataByUrl(getSecondData.evolutionChain.url);
+                PokemonApiResponse pokemon = new PokemonApiResponse
+                {
+                    id = getFirstData.id,
+                    name = getFirstData.name,
+                    weight = getFirstData.weight,
+                    types = getFirstData.types,
+                    sprites = getFirstData.sprites,
+                    species = getFirstData.species,
+                    chain = getThirdData.chain,
+                    evolutionChain = getSecondData.evolutionChain,// Aquí se mantiene el officialArtwork del primer objeto
+                    EvolveFrom = getSecondData.EvolveFrom,
+                    // ... agregar otros campos según sea necesario
+                };
+                return pokemon;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener los datos del Pokémon: " + ex.Message);
+                throw;
+            }
+        }
 
+        public async Task<PokemonApiResponse> SetSecondEvolutionPokemonData(PokemonApiResponse url)
+        {
+            try
+            {
+                int idPokemonEvolution2 = GetPokemonNumberFromURL(url.chain.EvolveTo[0].species.url);
+
+                PokemonApiResponse getFirstData = await GetPokemonDataByUrl(_urlApiPublicPokemonById+ idPokemonEvolution2);
+                PokemonApiResponse getSecondData = await GetPokemonDataByUrl(getFirstData.species.url);
+                PokemonApiResponse getThirdData = await GetPokemonDataByUrl(getSecondData.evolutionChain.url);
+                PokemonApiResponse pokemon = new PokemonApiResponse
+                {
+                    id = getFirstData.id,
+                    name = getFirstData.name,
+                    weight = getFirstData.weight,
+                    types = getFirstData.types,
+                    sprites = getFirstData.sprites,
+                    species = getFirstData.species,
+                    evolutionChain = getSecondData.evolutionChain,// Aquí se mantiene el officialArtwork del primer objeto
+                    chain = getThirdData.chain,
+                    Evolution1 = url,
+                    EvolveFrom = getFirstData.EvolveFrom,
+                };
+                return pokemon;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener los datos del Pokémon: " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<PokemonApiResponse> SetThirdEvolutionPokemonData(PokemonApiResponse url)
+        {
+            try
+            {
+                int idPokemonEvolution2 = GetPokemonNumberFromURL(url.chain.EvolveTo[0].species.url);
+
+                PokemonApiResponse getFirstData = await GetPokemonDataByUrl(_urlApiPublicPokemonById + url.id);
+                PokemonApiResponse getSecondData = await GetPokemonDataByUrl(url.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                PokemonApiResponse getThirdData = await GetPokemonDataByUrl(getSecondData.evolutionChain.url);
+                PokemonApiResponse pokemon = new PokemonApiResponse
+                {
+                    id = getFirstData.id,
+                    name = getFirstData.name,
+                    weight = getFirstData.weight,
+                    types = getFirstData.types,
+                    sprites = getFirstData.sprites,
+                    species = getFirstData.species,
+                    evolutionChain = getSecondData.evolutionChain,// Aquí se mantiene el officialArtwork del primer objeto
+                    chain = getThirdData.chain,
+                };
+                return pokemon;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener los datos del Pokémon: " + ex.Message);
+                throw;
+            }
+        }
 
 
     }

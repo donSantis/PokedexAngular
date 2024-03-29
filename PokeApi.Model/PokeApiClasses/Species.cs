@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace PokeApi.Model.PokeApiClasses
 {
-    public class Sprites
+    public class Species
     {
-        public string? front_default { get; set; }
-        public string? front_shiny { get; set; }
-        public Other? other{ get; set; }
-
+        public string? name { get; set; }
+        public string? url { get; set; }
 
     }
 }

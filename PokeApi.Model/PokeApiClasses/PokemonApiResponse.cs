@@ -10,23 +10,24 @@ namespace PokeApi.Model.PokeApiClasses
 {
     public class PokemonApiResponse
     {
-        public int id { get; set; }
-
-        public int? IdPokemonApi { get; set; }
-
+        public int? id { get; set; }
         public string? name { get; set; }
+        public PokemonApiResponse? Evolution1 { get; set; }
+        public PokemonApiResponse? Evolution2 { get; set; }
+        public PokemonApiResponse? Evolution3 { get; set; }
+        public int? weight { get; set; }
+        public List<Types>? types { get; set; }
+        public Sprites? sprites { get; set; }
+        public Url? species { get; set; }
+        [JsonProperty("evolution_chain")]
+        public Url? evolutionChain { get; set; }
+        public Chain? chain { get; set; }
 
-        public string? Evolution2 { get; set; }
-
-        public string? Evolution3 { get; set; }
-        public int weight { get; set; }
-        public List<Types> types { get; set; }
-        public Sprites sprites { get; set; }
-
-        public string? Url { get; set; }
-
-        //[JsonProperty("official-artwork")]
-        public OfficialArtwork? officialArtwork { get; set; }
-
+        public static implicit operator PokemonApiResponse(List<PokemonApiResponse> v)
+        {
+            throw new NotImplementedException();
+        }
+        [JsonProperty("evolves_from_species")]
+        public Url? EvolveFrom { get; set; }
     }
 }

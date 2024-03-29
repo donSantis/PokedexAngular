@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokeApi.Model.PokeApiClasses
+namespace PokeApi.Model
 {
-    public class Type
+    public class Url
     {
-        public string? name { get; set; }
         public string? url { get; set; }
     }
 }
