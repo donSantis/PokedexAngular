@@ -13,8 +13,4 @@
     <ProjectReference Include="..\PokeApi.Utility\PokeApi.Utility.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Services\Contract\"/>
-	</ItemGroup>
-
 </Project>

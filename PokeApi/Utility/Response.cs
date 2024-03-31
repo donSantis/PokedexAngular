@@ -1,4 +1,6 @@
-﻿namespace PokeApi.API.Utility
+﻿using PokeApi.Model.PokeApiClasses;
+
+namespace PokeApi.API.Utility
 {
     public class Response<T>
     {
@@ -9,7 +11,10 @@
 
     public class PokemonResponse
     {
-        public List<PokemonInfo> results { get; set; }
+        public string? count { get; set; }
+        public string? next { get; set; }
+        public string? previous { get; set; }
+        public List<PokemonApiResponse> results { get; set; }
     }
 
     public class PokemonInfo

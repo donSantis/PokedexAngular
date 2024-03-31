@@ -42,14 +42,19 @@ namespace PokeApi.API.Controllers
         }
 
         [HttpGet]
-        [Route("List2")]
-        public async Task<IActionResult> List2()
+        [Route("ListAllPkmnFromApi")]
+        public async Task<IActionResult> ListAllPkmnFromApi()
         {
-            var rsp = new ResponseString();
+            //var rsp = new ResponseString();
+            var rsp = new PokemonResponse();
+
             try
             {
 
-                rsp.rsp = await _pokeService.ListAllFirstGenerationPkmn();
+                rsp.results = await _pokeService.ListAllPkmnFromApi();
+
+
+                //rsp.rsp = await _pokeService.ListAllPkmnFromApi();
 
             }
             catch (Exception ex)

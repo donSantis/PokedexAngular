@@ -38,6 +38,9 @@ namespace PokeApi.IOC
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IPokemonService, PokemonService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IApiPublicPokemonService, ApiPublicPokemonService>();
+            services.AddScoped<GeneralPokemonService>();
+
         }
     }
 }

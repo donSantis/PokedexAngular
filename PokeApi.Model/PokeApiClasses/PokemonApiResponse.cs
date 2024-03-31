@@ -23,11 +23,10 @@ namespace PokeApi.Model.PokeApiClasses
         public Url? evolutionChain { get; set; }
         public Chain? chain { get; set; }
 
-        public static implicit operator PokemonApiResponse(List<PokemonApiResponse> v)
-        {
-            throw new NotImplementedException();
-        }
         [JsonProperty("evolves_from_species")]
         public Url? EvolveFrom { get; set; }
+        [JsonProperty("flavor_text_entries")]
+        public List<FlavorTextEntrie>? flavorTextEntries { get; set; }
+
     }
 }
