@@ -95,6 +95,23 @@ namespace PokeApi.BLL.Services
             }
         }
 
+        public async Task<string> ListPkmnByURL(string url)
+        {
+            try
+            {
+                var data = await _pokePublicApiRepository.ListPkmnByURL(url);
+                PokemonApiResponse pokemonesResponse = await Task.Run(() => GetPokemonDataFromURL(url));
+
+                //Console.WriteLine(uwu);
+
+                return data;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public async Task<bool> update(Pokemon_DTO model)
         {
             try
@@ -150,6 +167,10 @@ namespace PokeApi.BLL.Services
                     foreach (var result in response.results)
                     {
                         // Obtener el PokemonApiResponse correspondiente y agregarlo a la lista
+                        if (result.url == "https://pokeapi.co/api/v2/pokemon/19/")
+                        {
+                            var uwu = "uwu";
+                        }
                         PokemonApiResponse pokemon = await GetPokemonDataFromURL(result.url);
                         pokemonesApiResponse.Add(pokemon);
                         Console.WriteLine("procesando.. pokemonnro:" + pokemon.name);
@@ -221,6 +242,10 @@ namespace PokeApi.BLL.Services
                 PokemonApiResponse BasePokemonData = new();
                 PokemonApiResponse SecondEvolutionPokemonData = new();
                 PokemonApiResponse ThirdEvolutionPokemonData = new();
+                int uwu2 =0;
+                int uwu3 = 0;
+                int haveFirstEvolution = 0; 
+                int haveSecondEvolution = 0;
 
                 if (url != null)
                 {
@@ -301,70 +326,85 @@ namespace PokeApi.BLL.Services
 
                     //}
                     #endregion 
+                    
+
 
                     PokemonApiResponse uwu = await SetPokemonData(url);
-                    if(uwu.id == 18)
-                    {
-                        var uwuarton = await SetPokemonData(url);
-                    }
-                    if (uwu.id == 18)
-                    {
-                        var uwuarton = await SetPokemonData(url);
-                    }
                     PokemonApiResponse uwu4 = new();
                     PokemonApiResponse uwu5 = new();
                     PokemonApiResponse pokemonBase = new();
                     PokemonApiResponse pokemonFirstEvolution = new();
                     PokemonApiResponse pokemonSecondEvolution = new();
 
-                    int uwu2 = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].species.url);
-                    int uwu3 = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+
+
+                    if (uwu.chain.EvolveTo.Count > 0)
+                    {
+                        uwu2 = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].species.url);
+                        haveFirstEvolution = 1;
+                        
+                    }
+
+                    if (uwu.chain.EvolveTo[0].EvolveToPlus.Count > 0)
+                        {
+                            uwu3 = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                            haveSecondEvolution = 1;
+                        }
+
+
+               
+
+
                     PokemonApiResponse pokemonReturned = new();
 
                     if (uwu.EvolveFrom == null)
                     {
                         pokemonBase = uwu;
 
-                        int idPokemonFirstEvolution = GetPokemonNumberFromURL(pokemonBase.chain.EvolveTo[0].species.url);
-                        pokemonFirstEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonFirstEvolution + '/');
+                        if(haveFirstEvolution == 1)
+                        {
+                            int idPokemonFirstEvolution = GetPokemonNumberFromURL(pokemonBase.chain.EvolveTo[0].species.url);
+                            pokemonFirstEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonFirstEvolution + '/');
+                        }
 
-                        int idPokemonSecondEvolution = GetPokemonNumberFromURL(pokemonBase.chain.EvolveTo[0].EvolveToPlus[0].species.url);
-                        pokemonSecondEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonSecondEvolution + '/');
+                        if(haveSecondEvolution == 1)
+                        {
+                            int idPokemonSecondEvolution = GetPokemonNumberFromURL(pokemonBase.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                            pokemonSecondEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonSecondEvolution + '/');
+                        }
 
                         var pokemonOrderConditional = "PokemonBase";
                         pokemonReturned = await CreatePokemonByDataCollect(pokemonBase, pokemonFirstEvolution, pokemonSecondEvolution, pokemonOrderConditional);
 
                     }
-                    if (uwu.evolutionChain != null && uwu.id ==  uwu2 && uwu.id < uwu3)
+                    if (uwu.evolutionChain != null && uwu.id ==  uwu2 && uwu2 > 0)
                     {
                         int idPokemonBase = GetPokemonNumberFromURL(uwu.EvolveFrom.url);
                         pokemonBase = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonBase + '/');
 
                         pokemonFirstEvolution = uwu;
 
-                        int idPokemonSecondEvolution = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].EvolveToPlus[0].species.url);
-                        pokemonSecondEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonSecondEvolution + '/');
+                        if (haveSecondEvolution == 1)
+                        {
+                            int idPokemonSecondEvolution = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                            pokemonSecondEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonSecondEvolution + '/');
+                        }
+                        
 
                         var pokemonOrderConditional = "PokemonFirstEvolution";
                         pokemonReturned = await CreatePokemonByDataCollect(pokemonBase, pokemonFirstEvolution, pokemonSecondEvolution, pokemonOrderConditional);
 
 
                     }
-                    if (uwu.evolutionChain != null && uwu.id > uwu2 && uwu.id == uwu3 || uwu.evolutionChain != null && uwu.id >= uwu2 && uwu.id == uwu3)
+                    if (uwu.evolutionChain != null && uwu.id > uwu2 && uwu.id == uwu3 && uwu3 > 0 || uwu.evolutionChain != null && uwu.id >= uwu2 && uwu.id == uwu3 && uwu3 > 0)
                     {
-                        pokemonFirstEvolution = await SetSecondEvolutionPokemonData(uwu);
+                        int idPokemonSecondEvolution = GetPokemonNumberFromURL(uwu.chain.EvolveTo[0].species.url);
+                        pokemonFirstEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonSecondEvolution + '/');
+
                         int idPokemonBase = GetPokemonNumberFromURL(pokemonFirstEvolution.EvolveFrom.url);
-                        pokemonBase = await SetPokemonData(_urlApiPublicPokemonById + idPokemonBase);
-                        pokemonSecondEvolution = await SetThirdEvolutionPokemonData(pokemonBase);
+                        pokemonBase = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonBase + '/');
 
-                        pokemonBase.Evolution2 = pokemonFirstEvolution;
-                        pokemonBase.Evolution3 = pokemonSecondEvolution;
-
-                        pokemonFirstEvolution.Evolution1 = pokemonBase;
-                        pokemonFirstEvolution.Evolution3 = pokemonSecondEvolution;
-
-                        pokemonSecondEvolution.Evolution1 = pokemonBase;
-                        pokemonSecondEvolution.Evolution2 = pokemonFirstEvolution;
+                        pokemonSecondEvolution = uwu;
 
                         var pokemonOrderConditional = "PokemonSecondEvolution";
                         pokemonReturned = await CreatePokemonByDataCollect(pokemonBase, pokemonFirstEvolution, pokemonSecondEvolution, pokemonOrderConditional);
@@ -594,6 +634,7 @@ namespace PokeApi.BLL.Services
                     id = getFirstData.id,
                     name = getFirstData.name,
                     sprites = getFirstData.sprites,
+                    EvolveFrom = getSecondData.EvolveFrom
                     // ... agregar otros campos según sea necesario
                 };
                 return pokemon;

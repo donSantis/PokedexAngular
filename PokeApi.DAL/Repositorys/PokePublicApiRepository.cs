@@ -47,5 +47,28 @@ namespace PokeApi.DAL.Repositorys
         {
             throw new NotImplementedException();
         }
+
+        public async Task<string> ListPkmnByURL(string url)
+        {
+            try
+            {
+                // Construye la URL completa utilizando el BaseAddress y la ruta relativa
+
+                // Realiza la solicitud GET utilizando el HttpClient
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                // Lee el contenido de la respuesta como una cadena
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // Retornar los datos obtenidos
+                return responseBody;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error al hacer la solicitud HTTP: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

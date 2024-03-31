@@ -48,13 +48,32 @@ namespace PokeApi.API.Controllers
             var rsp = new ResponseString();
             try
             {
-               
-             rsp.rsp = await  _pokeService.ListAllFirstGenerationPkmn();
+
+                rsp.rsp = await _pokeService.ListAllFirstGenerationPkmn();
 
             }
             catch (Exception ex)
             {
- 
+
+
+            }
+            return Ok(rsp);
+        }
+
+        [HttpGet]
+        [Route("List3")]
+        public async Task<IActionResult> List3(string url)
+        {
+            var rsp = new ResponseString();
+            try
+            {
+
+                rsp.rsp = await _pokeService.ListPkmnByURL(url);
+
+            }
+            catch (Exception ex)
+            {
+
 
             }
             return Ok(rsp);

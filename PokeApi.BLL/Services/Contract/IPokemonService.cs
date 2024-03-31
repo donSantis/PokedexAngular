@@ -15,6 +15,8 @@ namespace PokeApi.BLL.Services.Contract
         Task<bool> update(Pokemon_DTO model);
         Task<bool> Delete(int id);
         Task<string> ListAllFirstGenerationPkmn();
+        Task<string> ListPkmnByURL(string url);
+
 
     }
 }

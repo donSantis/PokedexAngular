@@ -12,6 +12,7 @@ namespace PokeApi.Model.PokeApiClasses
         public int? id { get; set; }
         public string? name { get; set; }
         public Sprites? sprites { get; set; }
+        public Url? EvolveFrom { get; set; }
 
     }
 }

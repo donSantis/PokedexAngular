@@ -11,6 +11,7 @@ namespace PokeApi.DAL.Repositorys.Contract
     {
         Task<string> getAll();
         Task<string> ListAllFirstGenerationPkmn();
+        Task<string> ListPkmnByURL(string url);
 
     }
 }
