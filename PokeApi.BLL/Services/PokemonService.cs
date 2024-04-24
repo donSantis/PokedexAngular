@@ -89,7 +89,7 @@ namespace PokeApi.BLL.Services
             try
             {
                 var data = await _pokePublicApiRepository.getAll();
-                List<PokemonApiResponse> pokemonesResponse = await Task.Run(() => _apiPublicPokemonService.GetAllPokemonFromApi(data));
+                ReturnPokemonApiResponseClass pokemonesResponse = await Task.Run(() => _apiPublicPokemonService.GetAllPokemonFromApi(data));
 
                 //Console.WriteLine(uwu);
 
@@ -101,13 +101,13 @@ namespace PokeApi.BLL.Services
             }
         }
 
-        public async Task<List<PokemonApiResponse>> ListAllPkmnFromApi()
+        public async Task<ReturnPokemonApiResponseClass> ListAllPkmnFromApi()
         {
             try
             {
                 var data = await _pokePublicApiRepository.getAll();
                 //HACER METODO PARA OBTENER NEXT / PREVIOUS
-                List<PokemonApiResponse> pokemonesResponse = await _apiPublicPokemonService.GetAllPokemonFromApi(data);
+                ReturnPokemonApiResponseClass pokemonesResponse = await _apiPublicPokemonService.GetAllPokemonFromApi(data);
 
                 return pokemonesResponse;
             }

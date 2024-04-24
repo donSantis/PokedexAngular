@@ -6,6 +6,7 @@ using PikeApi.DTO;
 using PokeApi.API.Utility;
 using PokeApi.Model;
 using Newtonsoft.Json;
+using PokeApi.Model.PokeApiClasses;
 
 
 namespace PokeApi.API.Controllers
@@ -15,6 +16,8 @@ namespace PokeApi.API.Controllers
     public class PokemonController : ControllerBase
     {
         private readonly IPokemonService _pokeService;
+        private readonly ApiPublicPokemonService _apiPublicPokemonService;
+        private readonly GeneralPokemonService _GeneralPokemonService;
 
         public PokemonController(IPokemonService pokeService)
         {
@@ -50,10 +53,11 @@ namespace PokeApi.API.Controllers
 
             try
             {
-
-                rsp.results = await _pokeService.ListAllPkmnFromApi();
-
-
+                var uwu = await _pokeService.ListAllPkmnFromApi();
+                rsp.previous = uwu.previous;
+                rsp.next = uwu.next;
+                rsp.results = uwu.results;
+                rsp.count = uwu.count;
                 //rsp.rsp = await _pokeService.ListAllPkmnFromApi();
 
             }
@@ -74,7 +78,6 @@ namespace PokeApi.API.Controllers
             {
 
                 rsp.rsp = await _pokeService.ListPkmnByURL(url);
-
             }
             catch (Exception ex)
             {

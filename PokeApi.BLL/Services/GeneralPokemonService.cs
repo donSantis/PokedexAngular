@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Newtonsoft.Json;
+using PokeApi.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +47,23 @@ namespace PokeApi.BLL.Services
                 {
                     throw new InvalidOperationException("La URL no sigue el formato esperado.");
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al obtener el número de pokemon: " + ex.Message);
+                throw;
+            }
+        }
+
+        public ResponseApiClass GetPokemonResponseData(string data)
+        {
+            try
+            {
+                ResponseApiClass response = JsonConvert.DeserializeObject<ResponseApiClass>(data);
+
+
+                return response;
+                  
             }
             catch (Exception ex)
             {

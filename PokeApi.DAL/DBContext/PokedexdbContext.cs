@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using PokeApi.Model;
-using Microsoft.EntityFrameworkCore;    
+using Microsoft.EntityFrameworkCore;
+using PokeApi.Model.Album;
 namespace PokeApi.DAL.DBContext;
 
 public partial class PokedexdbContext : DbContext
@@ -24,6 +25,7 @@ public partial class PokedexdbContext : DbContext
     public virtual DbSet<Rol> Rols { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<AlbumBase> AlbumBases { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -51,6 +53,24 @@ public partial class PokedexdbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("url");
+        });
+
+        modelBuilder.Entity<AlbumBase>(entity =>
+        {
+            entity.ToTable("albumBase");
+            entity.Property(e => e.id).HasColumnName("id");
+            entity.Property(e => e.name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.description)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("description");
+            entity.Property(e => e.version).HasColumnName("version");
+            entity.Property(e => e.pokemonStart).HasColumnName("pokemonStart");
+            entity.Property(e => e.pokemonEnd).HasColumnName("pokemonEnd");
+            entity.Property(e => e.registerDate).HasColumnName("registerDate");
         });
 
         modelBuilder.Entity<MenuRol>(entity =>
@@ -116,9 +136,9 @@ public partial class PokedexdbContext : DbContext
         {
             entity.HasKey(e => e.IdUser).HasName("PK__users__3717C982EA70D20B");
 
-            entity.ToTable("users");
+            entity.ToTable("user");
 
-            entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.IdUser).HasColumnName("id");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
                 .IsUnicode(false)

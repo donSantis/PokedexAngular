@@ -37,16 +37,16 @@ namespace PokeApi.BLL.Services
             _httpClient = new HttpClient();
             _generalPokemonService = generalPokemonService;
         }
-        public async Task<List<PokemonApiResponse>> GetAllPokemonFromApi(string data)
+        public async Task<ReturnPokemonApiResponseClass> GetAllPokemonFromApi(string data)
         {
             try
             {
+                ReturnPokemonApiResponseClass returnPokemonApiResponseClass = new ReturnPokemonApiResponseClass();
                 // Deserializar el JSON en un objeto ResponseApiClass
                 ResponseApiClass response = JsonConvert.DeserializeObject<ResponseApiClass>(data);
                 if (response.results == null || !response.results.Any())
                 {
                     Console.WriteLine("La lista de resultados está vacía.");
-                    return new List<PokemonApiResponse>(); // Devuelve una lista vacía si no hay resultados
                 }
                 // Crear una lista para almacenar los pokemones
                 var pokemonesApiResponse = new List<PokemonApiResponse>();
@@ -73,8 +73,12 @@ namespace PokeApi.BLL.Services
                         Console.WriteLine("Error al procesar el Pokémon: " + task.Exception?.Message);
                     }
                 }
+                returnPokemonApiResponseClass.next = response.next;
+                returnPokemonApiResponseClass.previous = response.previous;
+                returnPokemonApiResponseClass.count = response.count;
+                returnPokemonApiResponseClass.results = pokemonesApiResponse;
                 // Devolver la lista de pokemones
-                return pokemonesApiResponse;
+                return returnPokemonApiResponseClass;
             }
             catch (Exception ex)
             {
@@ -132,9 +136,10 @@ namespace PokeApi.BLL.Services
                     }
                     if (basePokemonData.evolutionChain != null && basePokemonData.id == idPokemonFirstEvolution && idPokemonFirstEvolution > 0)
                     {
+                        pokemonFirstEvolution = basePokemonData;
                         int idPokemonBase = _generalPokemonService.GetPokemonNumberFromURL(basePokemonData.EvolveFrom.url);
                         basePokemonData = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonBase + '/');
-                        pokemonFirstEvolution = basePokemonData;
+                        
                         if (haveSecondEvolution == 1)
                         {
                             pokemonSecondEvolution = await SetPokemonDataShort(_urlApiPublicPokemonById + idPokemonSecondEvolution + '/');
