@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PikeApi.DTO;
 using PokeApi.Model;
+using PokeApi.Model.Filter;
 using PokeApi.Model.PokeApiClasses;
 
 
@@ -18,6 +19,9 @@ namespace PokeApi.BLL.Services.Contract
         Task<bool> Delete(int id);
         Task<string> ListAllFirstGenerationPkmn();
         Task<ReturnPokemonApiResponseClass> ListAllPkmnFromApi();
+        Task<ReturnPokemonApiResponseClass> ListPokemonFromApiWithFilters(Filter filter);
         Task<string> ListPkmnByURL(string url);
+        Task<PokemonApiResponse> GetPkmnByURL(string url);
+
     }
 }

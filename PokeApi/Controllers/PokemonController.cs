@@ -7,6 +7,10 @@ using PokeApi.API.Utility;
 using PokeApi.Model;
 using Newtonsoft.Json;
 using PokeApi.Model.PokeApiClasses;
+using System.Linq;
+using PokeApi.Model.Album;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using PokeApi.Model.Filter;
 
 
 namespace PokeApi.API.Controllers
@@ -17,11 +21,12 @@ namespace PokeApi.API.Controllers
     {
         private readonly IPokemonService _pokeService;
         private readonly ApiPublicPokemonService _apiPublicPokemonService;
-        private readonly GeneralPokemonService _GeneralPokemonService;
+        private readonly GeneralPokemonService _generalPokemonService;
 
-        public PokemonController(IPokemonService pokeService)
+        public PokemonController(IPokemonService pokeService, GeneralPokemonService generalPokemonService)
         {
             _pokeService = pokeService;
+            _generalPokemonService = generalPokemonService;
         }
 
         [HttpGet]
@@ -69,15 +74,83 @@ namespace PokeApi.API.Controllers
             return Ok(rsp);
         }
 
+        //[HttpGet]
+        //[Route("ListAllPkmnFromApiWithFilters")]
+        //public async Task<IActionResult> ListAllPkmnFromApiWithFilters(string filter)
+        //{
+        //    var rsp = new PokemonResponse();
+        //    try
+        //    {
+        //        var filtro = _generalPokemonService.GetUrlFromfilter(filter);
+        //        var dataPokemon = await _pokeService.ListAllPkmnFromApiWithFilters(filter);
+        //        ReturnPokemonApiResponseClass pokemonesResponse = await Task.Run(() => _apiPublicPokemonService.ListAllPkmnFromGenerationByUrl(dataPokemon));
+
+
+        //        Filter filterObject = JsonConvert.DeserializeObject<Filter>(filtro);
+        //        ReturnPokemonApiResponseClass filterObject2 = JsonConvert.DeserializeObject<ReturnPokemonApiResponseClass>(dataPokemon);
+
+        //        rsp.results = filterObject2.results;
+        //        string filterJson = JsonConvert.SerializeObject(filterObject);
+        //        //rsp.rsp = await _pokeService.ListAllPkmnFromApi();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+
+        //    }
+        //    return Ok(rsp);
+        //}
+
+
+        //[HttpGet]
+        //[Route("ListAllPkmnFromGenerationByUrl")]
+        //public async Task<IActionResult> ListAllPkmnFromGenerationByUrl(string url)
+        //{
+        //    var rsp = new PokemonResponse();
+        //    try
+        //    {
+        //        var uwu = await _pokeService.ListAllPkmnFromGenerationByUrl(url);
+        //        rsp.results = uwu.results;
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+
+        //    }
+        //    return Ok(rsp);
+        //}
+
         [HttpGet]
-        [Route("List3")]
-        public async Task<IActionResult> List3(string url)
+        [Route("ListPokemonFromApiToAlbumByAlbum")]
+        public async Task<IActionResult> ListPokemonFromApiToAlbumByAlbum(string album)
         {
-            var rsp = new ResponseString();
+            var rsp = new PokemonResponse();
             try
             {
+                AlbumBase data = JsonConvert.DeserializeObject<AlbumBase>(album);
 
-                rsp.rsp = await _pokeService.ListPkmnByURL(url);
+
+                string jsonString = JsonConvert.SerializeObject(data);
+                //var uwu = await _pokeService.ListAllPkmnFromGenerationByUrl(url);
+                //  rsp.results = uwu.results;
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            return Ok(rsp);
+        }
+
+        [HttpGet]
+        [Route("GetPkmnByUrl")]
+        public async Task<IActionResult> GetPkmnByUrl(string url)
+        {
+            var rsp = new PokemonApiResponse();
+            try
+            {
+                rsp = await _pokeService.GetPkmnByURL(url);
             }
             catch (Exception ex)
             {
@@ -144,5 +217,29 @@ namespace PokeApi.API.Controllers
             }
             return Ok(rsp);
         }
+
+
+        //---------------------------------------------------------------------------------------------------------------------
+        [HttpPost]
+        [Route("ListPokemonFromApiWithFilters")]
+        public async Task<IActionResult> ListPokemonFromApiWithFilters([FromBody] Filter filter)
+        {
+            var rsp = new PokemonResponse();
+            try
+            {
+                ReturnPokemonApiResponseClass dataPokemon = await _pokeService.ListPokemonFromApiWithFilters(filter);
+                Filter filtro = _generalPokemonService.GetUrlFromfilter(filter);
+                rsp.next = filtro.Pages.nextPageUrl;
+                rsp.previous = filtro.Pages.prevPageUrl;
+                rsp.results = dataPokemon.results;
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            return Ok(rsp);
+        }
+
     }
 }

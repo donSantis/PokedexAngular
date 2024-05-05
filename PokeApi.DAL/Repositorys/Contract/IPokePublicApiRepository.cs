@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PokeApi.Model;
+using PokeApi.Model.Filter;
 
 namespace PokeApi.DAL.Repositorys.Contract
 {
@@ -11,8 +12,7 @@ namespace PokeApi.DAL.Repositorys.Contract
     {
         Task<string> getAll();
         Task<string> ListAllFirstGenerationPkmn();
-        Task<string> ListPkmnByURL(string url);
+        Task<string> getPokemonByFilter(Filter filter);
 
     }
 }
-

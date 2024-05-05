@@ -11,6 +11,8 @@ namespace PokeApi.DAL.Repositorys.Contract
     {
         Task<Pokemon> Register(Pokemon model);
         Task<string> ListAllFirstGenerationPkmn(); // Agrega esta definición al método
+        Task<string> ListAllPkmnFromGenerationByUrl(string url);
+        Task<string> ListPkmnByURL(string url);
 
     }
 }

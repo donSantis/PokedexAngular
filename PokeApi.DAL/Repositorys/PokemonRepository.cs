@@ -15,7 +15,7 @@ namespace PokeApi.DAL.Repositorys
         private readonly PokedexdbContext _dbContext;
         private readonly HttpClient _httpClient;
 
-        public PokemonRepository(PokedexdbContext dbContext) : base(dbContext) 
+        public PokemonRepository(PokedexdbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
             _httpClient = new HttpClient();
@@ -76,6 +76,54 @@ namespace PokeApi.DAL.Repositorys
                 }
             }
             return model;
+        }
+
+        public async Task<string> ListAllPkmnFromGenerationByUrl(string uwu)
+        {
+            try
+            {
+                // Construye la URL completa utilizando el BaseAddress y la ruta relativa
+                var url = uwu;
+
+                // Realiza la solicitud GET utilizando el HttpClient
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                // Lee el contenido de la respuesta como una cadena
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // Retornar los datos obtenidos
+                return responseBody;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error al hacer la solicitud HTTP: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> ListPkmnByURL(string uwu)
+        {
+            try
+            {
+                // Construye la URL completa utilizando el BaseAddress y la ruta relativa
+                var url = uwu;
+
+                // Realiza la solicitud GET utilizando el HttpClient
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                // Lee el contenido de la respuesta como una cadena
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // Retornar los datos obtenidos
+                return responseBody;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error al hacer la solicitud HTTP: {ex.Message}");
+                throw;
+            }
         }
 
     }

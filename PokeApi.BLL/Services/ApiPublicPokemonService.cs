@@ -87,6 +87,58 @@ namespace PokeApi.BLL.Services
                 throw;
             }
         }
+
+        public async Task<ReturnPokemonApiResponseClass> ListAllPkmnFromGenerationByUrl(string data)
+        {
+            try
+            {
+                ReturnPokemonApiResponseClass returnPokemonApiResponseClass = new ReturnPokemonApiResponseClass();
+                // Deserializar el JSON en un objeto ResponseApiClass
+                ResponseApiGenerationPokemon response = JsonConvert.DeserializeObject<ResponseApiGenerationPokemon>(data);
+                if (response == null || !response.pokemonSpecies.Any())
+                {
+                    Console.WriteLine("La lista de resultados está vacía.");
+                }
+                // Crear una lista para almacenar los pokemones
+                var pokemonesApiResponse = new List<PokemonApiResponse>();
+                // Crear una lista para almacenar las tareas de obtención de datos del Pokémon
+                var pokemonTasks = new List<Task<PokemonApiResponse>>();
+                // Recorrer todos los objetos en la lista de resultados
+                foreach (var result in response.pokemonSpecies)
+                {
+                    Console.WriteLine("Procesando Pokémon: " + result.name);
+                    int id = _generalPokemonService.GetPokemonNumberFromURL(result.url);
+                    string url = "https://pokeapi.co/api/v2/pokemon/" + id + "/";
+                    // Obtener el PokemonApiResponse correspondiente y agregarlo a la lista
+                    pokemonTasks.Add(GetPokemonDataFromURL(url));
+                }
+                // Esperar a que todas las tareas de obtención de datos del Pokémon se completen
+                await Task.WhenAll(pokemonTasks);
+                foreach (var task in pokemonTasks)
+                {
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        pokemonesApiResponse.Add(task.Result);
+                        Console.WriteLine("Procesando Pokémon: " + task.Result.name);
+                    }
+                    else if (task.IsFaulted)
+                    {
+                        // Manejar la excepción de la tarea fallida
+                        Console.WriteLine("Error al procesar el Pokémon: " + task.Exception?.Message);
+                    }
+                }
+                returnPokemonApiResponseClass.results = pokemonesApiResponse;
+                // Devolver la lista de pokemones
+                return returnPokemonApiResponseClass;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al procesar el JSON: " + ex.Message);
+                // Lanzar una excepción personalizada o devolver null según sea necesario
+                throw;
+            }
+        }
+
         public async Task<PokemonApiResponse> GetPokemonDataFromURL(string url)
         {
             try
@@ -114,11 +166,16 @@ namespace PokeApi.BLL.Services
                         idPokemonFirstEvolution = _generalPokemonService.GetPokemonNumberFromURL(basePokemonData.chain.EvolveTo[0].species.url);
                         haveFirstEvolution = 1;
                     }
-                    if (basePokemonData.chain.EvolveTo[0].EvolveToPlus.Count > 0)
+                    if(basePokemonData.chain.EvolveTo.Count > 0)
                     {
-                        idPokemonSecondEvolution = _generalPokemonService.GetPokemonNumberFromURL(basePokemonData.chain.EvolveTo[0].EvolveToPlus[0].species.url);
-                        haveSecondEvolution = 1;
+                        if (basePokemonData.chain.EvolveTo[0].EvolveToPlus.Count > 0)
+                        {
+                            idPokemonSecondEvolution = _generalPokemonService.GetPokemonNumberFromURL(basePokemonData.chain.EvolveTo[0].EvolveToPlus[0].species.url);
+                            haveSecondEvolution = 1;
+                        }
                     }
+
+                    
 
                     if (basePokemonData.EvolveFrom == null)
                     {
@@ -166,7 +223,9 @@ namespace PokeApi.BLL.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Error al obtener los datos del Pokémon: " +  url);
                 Console.WriteLine("Error al obtener los datos del Pokémon: " + ex.Message);
+
                 throw;
             }
         }

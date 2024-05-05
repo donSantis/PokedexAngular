@@ -16,6 +16,8 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Linq;
+using PokeApi.Model.Filter;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace PokeApi.BLL.Services
@@ -24,6 +26,8 @@ namespace PokeApi.BLL.Services
     {
         private readonly IGenericRepository<Pokemon> _pokemonRepository;
         private readonly IPokePublicApiRepository _pokePublicApiRepository;
+        private readonly IPokemonRepository _pokemonRepository2;
+
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
         private readonly string _urlApiPublicPokemonById = "https://pokeapi.co/api/v2/pokemon/";
@@ -31,9 +35,10 @@ namespace PokeApi.BLL.Services
 
 
 
-        public PokemonService(IGenericRepository<Pokemon> pokemonRepository, IPokePublicApiRepository pokePublicApiRepository, IMapper mapper, IApiPublicPokemonService apiPublicPokemonService)
+        public PokemonService(IGenericRepository<Pokemon> pokemonRepository, IPokemonRepository pokemonRepository2, IPokePublicApiRepository pokePublicApiRepository, IMapper mapper, IApiPublicPokemonService apiPublicPokemonService)
         {
             _pokemonRepository = pokemonRepository;
+            _pokemonRepository2 = pokemonRepository2;
             _pokePublicApiRepository = pokePublicApiRepository;
             _mapper = mapper;
             _httpClient = new HttpClient();
@@ -117,16 +122,65 @@ namespace PokeApi.BLL.Services
             }
         }
 
+        //public async Task<string> ListAllPkmnFromApiWithFilters(string filter)
+        //{
+        //    try
+        //    {
+        //        Filter filterObject = JsonConvert.DeserializeObject<Filter>(filter);
+
+        //        var data = await _pokePublicApiRepository.getPokemonByFilter(filter);
+        //        //HACER METODO PARA OBTENER NEXT / PREVIOUS
+        //        return data;
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
+
 
         public async Task<string> ListPkmnByURL(string url)
         {
             try
             {
-                var data = await _pokePublicApiRepository.ListPkmnByURL(url);
-                PokemonApiResponse pokemonesResponse = await Task.Run(() => _apiPublicPokemonService.GetPokemonDataFromURL(url));
+                var data = await _pokemonRepository2.ListPkmnByURL(url);
                 //Console.WriteLine(uwu);
 
                 return data;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public async Task<PokemonApiResponse> GetPkmnByURL(string url)
+        {
+            try
+            {
+                var data = await _pokemonRepository2.ListPkmnByURL(url);
+                PokemonApiResponse pokemonesResponse = await Task.Run(() => _apiPublicPokemonService.GetPokemonDataFromURL(url));
+                //Console.WriteLine(uwu);
+
+                return pokemonesResponse;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<ReturnPokemonApiResponseClass> ListAllPkmnFromGenerationByUrl(string url)
+        {
+            try
+            {
+                var data = await _pokemonRepository2.ListAllPkmnFromGenerationByUrl(url);
+
+                ResponseApiGenerationPokemon data2 = JsonConvert.DeserializeObject<ResponseApiGenerationPokemon>(data);
+                string jsonString = JsonConvert.SerializeObject(data2);
+                ReturnPokemonApiResponseClass pokemonesResponse = await Task.Run(() => _apiPublicPokemonService.ListAllPkmnFromGenerationByUrl(jsonString));
+                //Console.WriteLine(uwu);
+
+                return pokemonesResponse;
             }
             catch
             {
@@ -152,5 +206,23 @@ namespace PokeApi.BLL.Services
             catch { throw; }
         }
 
+        //----------------------------------------------------------------------------------------------------------------
+        
+        public async Task<ReturnPokemonApiResponseClass> ListPokemonFromApiWithFilters(Filter filter)
+        {
+            try
+            {
+                var data = await _pokePublicApiRepository.getPokemonByFilter(filter);
+                ReturnPokemonApiResponseClass pokemonesResponse = await _apiPublicPokemonService.GetAllPokemonFromApi(data);
+
+                return pokemonesResponse;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+ 
     }
 }
