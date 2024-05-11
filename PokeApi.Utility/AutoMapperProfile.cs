@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PokeApi.Model;
 using PikeApi.DTO;
+using PokeApi.Model.Sticker;
 
 
 
@@ -51,6 +52,11 @@ namespace PokeApi.Utility
             CreateMap<Pokemon, Pokemon_DTO>().ReverseMap();
 
             #endregion Pokemon
+            #region Sticker
+
+            CreateMap<Stickers, Sticker_DTO>().ReverseMap();
+
+            #endregion Sticker
         }
 
     }

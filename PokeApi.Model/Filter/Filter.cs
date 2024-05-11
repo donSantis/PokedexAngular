@@ -1,4 +1,5 @@
 ﻿using PokeApi.Model.Album;
+using PokeApi.Model.Sticker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace PokeApi.Model.Filter
         public string? name { get; set; }
         public AlbumBase? AlbumBase { get; set; }
         public FilterPages? Pages { get; set; }
-
+        public User? user{ get; set; }
+        public Stickers? Sticker { get; set; }
     }
 }

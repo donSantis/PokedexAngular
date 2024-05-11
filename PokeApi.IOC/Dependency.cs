@@ -41,6 +41,7 @@ namespace PokeApi.IOC
             services.AddScoped<IApiPublicPokemonService, ApiPublicPokemonService>();
             services.AddScoped<GeneralPokemonService>();
             services.AddScoped<IAlbumService, AlbumService>(); // Esto es solo un ejemplo, debes reemplazar AlbumService con la implementación real de IAlbumService
+            services.AddScoped<IStickerService, StickerService>(); // Ejemplo de registro del servicio
 
 
         }

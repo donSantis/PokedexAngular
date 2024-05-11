@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using PokeApi.Model;
 using Microsoft.EntityFrameworkCore;
 using PokeApi.Model.Album;
+using PokeApi.Model.Sticker;
+using PikeApi.DTO;
+
 namespace PokeApi.DAL.DBContext;
 
 public partial class PokedexdbContext : DbContext
@@ -25,6 +28,8 @@ public partial class PokedexdbContext : DbContext
     public virtual DbSet<Rol> Rols { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Sticker_DTO> Stickers { get; set; }
+
     public virtual DbSet<AlbumBase> AlbumBases { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -167,6 +172,19 @@ public partial class PokedexdbContext : DbContext
             entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Users)
                 .HasForeignKey(d => d.IdRol)
                 .HasConstraintName("FK__users__idRol__403A8C7D");
+        });
+
+        modelBuilder.Entity<Stickers>(entity =>
+        {
+            entity.ToTable("sticker");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.idPokemon).HasColumnName("idPokemon");
+            entity.Property(e => e.idUser).HasColumnName("idUser");
+            entity.Property(e => e.state).HasColumnName("state");
+            entity.Property(e => e.version).HasColumnName("version");
+            entity.Property(e => e.lastModification).HasColumnName("lastModification");
+            entity.Property(e => e.registerDate).HasColumnName("registerDate");
+
         });
 
         OnModelCreatingPartial(modelBuilder);

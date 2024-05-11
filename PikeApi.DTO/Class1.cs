@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace PikeApi.DTO
 {
-    public class Pokemon_DTO
+    internal class Class1
     {
-        public int? IdPokemon { get; set; }
-        public string? Name { get; set; }
-        public string? url { get; set; }
-
     }
 }
