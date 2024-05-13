@@ -34,8 +34,8 @@ namespace PokeApi.BLL.Services
             try
             {
                 IQueryable<Menu> tbResult = (from u in tbUser
-                                             join mr in tbMenuRol on u.IdRol equals mr.IdRol
-                                             join m in tbMenu on mr.IdMenu equals m.IdMenu
+                                             join mr in tbMenuRol on u.idRol equals mr.IdRol
+                                             join m in tbMenu on mr.id equals m.id
                                              select m).AsQueryable();
                 var menuList = tbResult.ToList();
                 return _mapper.Map<List<Menu_DTO>>(menuList);   
