@@ -8,7 +8,7 @@ namespace PikeApi.DTO
 {
     public class Rol_DTO
     {
-        public int IdRol { get; set; }
-        public string? Name { get; set; }
+        public int id { get; set; }
+        public string? name { get; set; }
     }
 }

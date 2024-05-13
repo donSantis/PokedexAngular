@@ -8,6 +8,10 @@ using AutoMapper;
 using PokeApi.Model;
 using PikeApi.DTO;
 using PokeApi.Model.Sticker;
+using PokeApi.Model.Menu;
+using PokeApi.Model.PokeApiClasses;
+using PokeApi.Model.Exchange;
+using PokeApi.Model.Filter;
 
 
 
@@ -26,25 +30,25 @@ namespace PokeApi.Utility
             #region User
             CreateMap<User, User_DTO>()
                 .ForMember(d => 
-                    d.Rol,
-                    opt => opt.MapFrom(o => o.IdRolNavigation.Name))
+                    d.rol,
+                    opt => opt.MapFrom(o => o.idRolNavigation.name))
                 .ForMember(d => 
-                    d.Status,
-                    opt => opt.MapFrom(o => o.Status == true ? 1 : 0)
+                    d.status,
+                    opt => opt.MapFrom(o => o.status == true ? 1 : 0)
                     );
 
             CreateMap<User, Sesion_DTO>()
                 .ForMember(d =>
-                    d.Rol,
-                    opt => opt.MapFrom(o => o.IdRolNavigation.Name)
+                    d.rol,
+                    opt => opt.MapFrom(o => o.idRolNavigation.name)
                 );
             CreateMap<User_DTO, User>()
                 .ForMember(d =>
-                    d.IdRolNavigation,
+                    d.idRolNavigation,
                     opt => opt.Ignore())
                 .ForMember( d =>
-                    d.Status,
-                    opt => opt.MapFrom(o => o.Status == 1? true:false)
+                    d.status,
+                    opt => opt.MapFrom(o => o.status == 1? true:false)
                 );
             #endregion User
             #region Pokemon
@@ -57,6 +61,11 @@ namespace PokeApi.Utility
             CreateMap<Stickers, Sticker_DTO>().ReverseMap();
 
             #endregion Sticker
+            #region Exchanges
+
+            CreateMap<FilterExchange, Exchanges>();
+
+            #endregion Exchanges
         }
 
     }

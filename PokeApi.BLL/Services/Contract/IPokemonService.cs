@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PikeApi.DTO;
-using PokeApi.Model;
 using PokeApi.Model.Filter;
 using PokeApi.Model.PokeApiClasses;
+using PokeApi.Model.Response;
 
 
 namespace PokeApi.BLL.Services.Contract

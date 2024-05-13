@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PokeApi.DAL.Repositorys.Contract;
 using PikeApi.DTO;
-using PokeApi.Model;
 using PokeApi.Model.PokeApiClasses;
 using PokeApi.BLL.Services.Contract;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +17,7 @@ using System.Security.Claims;
 using System.Linq;
 using PokeApi.Model.Filter;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using PokeApi.Model.Response;
 
 
 namespace PokeApi.BLL.Services

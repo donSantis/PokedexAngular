@@ -14,10 +14,10 @@ public partial class Stickers
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int id { get; set; }
     public int? idPokemon { get; set; } // para ver que pokemon es 
     public int? idUser { get; set; }
-    public int? state { get; set; }
+    public int? status { get; set; }
     public int? version { get; set; }
     public int? shiny { get; set; }
     public DateTime? lastModification { get; set; }

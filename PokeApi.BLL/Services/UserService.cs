@@ -28,10 +28,10 @@ namespace PokeApi.BLL.Services
             try
             {
                 var user = await _userRepository.CreateModel(_mapper.Map<User>(model));
-                if(user.IdUser == 0)
+                if(user.id == 0)
                     throw new TaskCanceledException("El usuario no fue creado");
-                var query = await _userRepository.Consulta(u => u.IdUser == user.IdUser);
-                user = query.Include(rol => rol.IdRolNavigation).First();
+                var query = await _userRepository.Consulta(u => u.id == user.id);
+                user = query.Include(rol => rol.idRolNavigation).First();
                 return _mapper.Map<User_DTO>(user);
 
             }
@@ -45,7 +45,7 @@ namespace PokeApi.BLL.Services
         {
             try
             {
-                var userFind = await _userRepository.GetModel(u => u.IdUser == id);
+                var userFind = await _userRepository.GetModel(u => u.id == id);
                 if (userFind == null)
                     throw new TaskCanceledException("El usuario no existe");
 
@@ -65,7 +65,7 @@ namespace PokeApi.BLL.Services
             try
             {
                 var query = await _userRepository.Consulta();
-                var userList = query.Include(rol => rol.IdRolNavigation).ToList();
+                var userList = query.Include(rol => rol.idRolNavigation).ToList();
                 return _mapper.Map<List<User_DTO>>(userList);
 
             }
@@ -79,15 +79,15 @@ namespace PokeApi.BLL.Services
             try
             {
                 var userModel = _mapper.Map<User>(model);
-                var userFind = await _userRepository.GetModel(u => u.IdUser == userModel.IdUser);
+                var userFind = await _userRepository.GetModel(u => u.id == userModel.id);
                 if(userFind == null)
                     throw new TaskCanceledException("El usuario no existe");
-                userFind.Name = userModel.Name;
-                userFind.SecondName = userModel.SecondName;
-                userFind.Email = userModel.Email;
-                userFind.IdRol = userModel.IdRol;
-                userFind.Password = userModel.Password;
-                userFind.Status = userModel.Status;
+                userFind.name = userModel.name;
+                userFind.secondName = userModel.secondName;
+                userFind.email = userModel.email;
+                userFind.idRol = userModel.idRol;
+                userFind.password = userModel.password;
+                userFind.status = userModel.status;
                 bool response = await _userRepository.EditModel(userFind);
                 if (!response)
                     throw new TaskCanceledException("No se han realizado cambios al usuario");
@@ -103,14 +103,14 @@ namespace PokeApi.BLL.Services
             try
             {
                 var query = await _userRepository.Consulta( u => 
-                u.Email == email &&
-                u.Password == password
+                u.email == email &&
+                u.password == password
                 );
 
                 if (query.FirstOrDefault() == null)
                     throw new TaskCanceledException("El usuario no existe");
 
-                User returnUser = query.Include(rol => rol.IdRolNavigation).First();
+                User returnUser = query.Include(rol => rol.idRolNavigation).First();
                 return _mapper.Map<Sesion_DTO>(returnUser);
 
             }

@@ -8,14 +8,14 @@ namespace PikeApi.DTO
 {
     public class User_DTO
     {
-        public int IdUser { get; set; }
-        public string? Name { get; set; }
-        public string? SecondName { get; set; }
-        public string? Email { get; set; }
-        public int? IdRol { get; set; }
-        public string? Rol { get; set; }
-        public string? Password { get; set; }
-        public int? Status { get; set; }
+        public int id { get; set; }
+        public string? name { get; set; }
+        public string? secondName { get; set; }
+        public string? email { get; set; }
+        public int? idRol { get; set; }
+        public string? rol { get; set; }
+        public string? password { get; set; }
+        public int? status { get; set; }
 
     }
 }

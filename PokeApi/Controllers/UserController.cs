@@ -47,7 +47,7 @@ namespace PokeApi.API.Controllers
             try
             {
                 rsp.Status = true;
-                rsp.Value = await _userService.ValidateCredencial(login.Email, login.Password);
+                rsp.Value = await _userService.ValidateCredencial(login.email, login.password);
             }
             catch (Exception ex)
             {

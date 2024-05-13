@@ -24,15 +24,15 @@ namespace PokeApi.API.Controllers
             _stickerService = stickerService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("List")]
-        public async Task<IActionResult> List(int id)
+        public async Task<IActionResult> List(Filter filter)
         {
             var rsp = new Response<List<Sticker_DTO>>();
             try
             {
                 rsp.Status = true;
-                rsp.Value = await _stickerService.List(id);
+                rsp.Value = await _stickerService.List(filter);
             }
             catch (Exception ex)
             {

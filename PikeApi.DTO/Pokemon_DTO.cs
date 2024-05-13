@@ -8,8 +8,8 @@ namespace PikeApi.DTO
 {
     public class Pokemon_DTO
     {
-        public int? IdPokemon { get; set; }
-        public string? Name { get; set; }
+        public int? idPokemon { get; set; }
+        public string? name { get; set; }
         public string? url { get; set; }
 
     }

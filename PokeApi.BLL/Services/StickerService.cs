@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using AutoMapper;
 using PokeApi.DAL.Repositorys.Contract;
 using PikeApi.DTO;
@@ -11,6 +12,8 @@ using PokeApi.BLL.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using PokeApi.Model.Sticker;
 using PokeApi.Model.Filter;
+
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PokeApi.BLL.Services
 {
@@ -23,20 +26,31 @@ namespace PokeApi.BLL.Services
             _stickerRepository = stickerRepository;
             _mapper = mapper;
         }
-        public async Task<List<Sticker_DTO>> List(int id)
+        public async Task<List<Sticker_DTO>> List(Filter filter)
         {
             try
             {
-                IQueryable<Stickers> query = await _stickerRepository.Consulta(u => u.idUser == id && u.state == 1);
-                var stickerList = query.ToList();
-                return _mapper.Map<List<Sticker_DTO>>(stickerList);
+                // Obtener la lista de IDs de usuario del filtro
+                var userIds = filter.filterUser.idsUsers; // Suponiendo que Filter tiene una propiedad UserIds que es una lista de IDs de usuario
 
+                // Consultar stickers para los usuarios en la lista de IDs
+                IQueryable<Stickers> query = await _stickerRepository.Consulta(u => userIds.Contains(u.idUser));
+
+                if (filter.filterSticker != null && filter.filterSticker.status != null)
+                {
+                    // Filtrar por estado del sticker si se proporciona
+                    query = query.Where(x => x.status == filter.filterSticker.status);
+                }
+
+                var stickerList = await query.ToListAsync(); // Esperar la tarea correctamente
+                return _mapper.Map<List<Sticker_DTO>>(stickerList);
             }
             catch
             {
                 throw;
             }
         }
+
 
         public async Task<List<Sticker_DTO>> ListWithFilter(Filter filter)
         {
@@ -59,10 +73,10 @@ namespace PokeApi.BLL.Services
             {
                 StickerBox stickerBox = new StickerBox();
 
-                if (filter != null && filter.AlbumBase.pokemonStart != null && filter.AlbumBase.pokemonEnd != null)
+                if (filter != null && filter.albumBase.pokemonStart != null && filter.albumBase.pokemonEnd != null)
                 {
-                    int pokemonStart = (int)filter.AlbumBase.pokemonStart;
-                    int pokemonEnd = (int)filter.AlbumBase.pokemonEnd;
+                    int pokemonStart = (int)filter.albumBase.pokemonStart;
+                    int pokemonEnd = (int)filter.albumBase.pokemonEnd;
                     // Crear una lista para almacenar los stickers
                     List<Stickers> stickers = new List<Stickers>();
 
@@ -74,9 +88,9 @@ namespace PokeApi.BLL.Services
                         Stickers sticker = new Stickers
                         {
                             idPokemon = randomValue,
-                            idUser = filter.user.IdUser,
-                            state = 1,
-                            version = filter.AlbumBase.version,
+                            idUser = filter.user.id,
+                            status = 1,
+                            version = filter.albumBase.version,
                             shiny = await IsShiny(randomValue),
                             registerDate = DateTime.Now
 
@@ -102,9 +116,9 @@ namespace PokeApi.BLL.Services
             try
             {
                 var data = await _stickerRepository.CreateModel(_mapper.Map<Stickers>(model));
-                if (data.Id == 0)
+                if (data.id == 0)
                     throw new TaskCanceledException("El sticker no fue creado");
-                var query = await _stickerRepository.Consulta(u => u.Id == data.Id);
+                var query = await _stickerRepository.Consulta(u => u.id == data.id);
                 data = query.First();
                 return _mapper.Map<Sticker_DTO>(data);
 
@@ -140,6 +154,7 @@ namespace PokeApi.BLL.Services
                 throw;
             }
         }
+
 
 
     }

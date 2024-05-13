@@ -8,6 +8,7 @@ using PokeApi.DAL.Repositorys.Contract;
 using PikeApi.DTO;
 using PokeApi.Model;
 using PokeApi.BLL.Services.Contract;
+using PokeApi.Model.Menu;
 
 namespace PokeApi.BLL.Services
 {
@@ -28,22 +29,39 @@ namespace PokeApi.BLL.Services
 
         public async Task<List<Menu_DTO>> List(int idUser)
         {
-            IQueryable<User> tbUser = await _userRepository.Consulta(u => u.IdUser == idUser);
-            IQueryable<MenuRol> tbMenuRol = await _menuRolRepository.Consulta();
-            IQueryable<Menu> tbMenu = await _menuRepository.Consulta();
             try
             {
-                IQueryable<Menu> tbResult = (from u in tbUser
-                                             join mr in tbMenuRol on u.idRol equals mr.IdRol
-                                             join m in tbMenu on mr.id equals m.id
-                                             select m).AsQueryable();
-                var menuList = tbResult.ToList();
-                return _mapper.Map<List<Menu_DTO>>(menuList);   
+                // Obtener el rol del usuario incluyendo la propiedad de navegación Role
+                var user = await _userRepository.Consulta(u => u.id == idUser);
+
+                if (user == null || !user.Any() || user.First().idRol == null)
+                {
+                    throw new Exception("No se encontró el usuario o su rol asociado.");
+                }
+
+                var roleId = user.First().idRol;
+
+                // Obtener los menús asociados al rol del usuario
+                var menuRoles = await _menuRolRepository.Consulta(mr => mr.idRol == roleId);
+
+                // Obtener los IDs de los menús asociados al rol del usuario
+                var menuIds = menuRoles.Select(mr => mr.idMenu).ToList();
+
+                // Obtener los detalles de los menús
+                var menus = await _menuRepository.Consulta(m => menuIds.Contains(m.id));
+
+                // Mapear los menús a DTO
+                var menuDTOs = _mapper.Map<List<Menu_DTO>>(menus);
+
+                return menuDTOs;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Error al obtener los menús del usuario.", ex);
             }
         }
+
+
+
     }
 }

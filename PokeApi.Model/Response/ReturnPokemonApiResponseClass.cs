@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokeApi.Model
+namespace PokeApi.Model.Response
 {
     public class ReturnPokemonApiResponseClass
     {

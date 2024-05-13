@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokeApi.Model
+namespace PokeApi.Model.PokeApiClasses
 {
-    public class ResponseApiResultsClass
+    public class PokemonSpecies
     {
         public string? name { get; set; }
         public string? url { get; set; }

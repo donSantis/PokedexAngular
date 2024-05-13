@@ -11,7 +11,7 @@ namespace PikeApi.DTO
         public int id { get; set; }
         public int idPokemon{ get; set; }
         public int idUser { get; set; }
-        public int state{ get; set; }
+        public int status{ get; set; }
 
 
     }

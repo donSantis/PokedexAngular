@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
-using PokeApi.Model;
 using PokeApi.Model.Filter;
+using PokeApi.Model.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,25 +81,25 @@ namespace PokeApi.BLL.Services
                 var url = "";
                 Filter filterObject = JsonConvert.DeserializeObject<Filter>(filter);
 
-                if (filterObject.Pages.nextPageUrl == null && filterObject.Pages.offSet == null)
+                if (filterObject.filterPages.nextPageUrl == null && filterObject.filterPages.offSet == null)
                 {
-                    filterObject.Pages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.AlbumBase.pokemonStart + "&limit=20";
-                    filterObject.Pages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filterObject.AlbumBase.pokemonStart + 20) + "&limit=20";
-                    filterObject.Pages.actualPage = 1;
-                    filterObject.Pages.nextPage = 2;
-                    filterObject.Pages.prevPage = 1;
-                    filterObject.Pages.offSet = 20;
+                    filterObject.filterPages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.albumBase.pokemonStart + "&limit=20";
+                    filterObject.filterPages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filterObject.albumBase.pokemonStart + 20) + "&limit=20";
+                    filterObject.filterPages.actualPage = 1;
+                    filterObject.filterPages.nextPage = 2;
+                    filterObject.filterPages.prevPage = 1;
+                    filterObject.filterPages.offSet = 20;
 
                 }
                 else
                 {
-                    filterObject.Pages.prevPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filterObject.Pages.actualOffSet - 20) + "&limit=20";
+                    filterObject.filterPages.prevPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filterObject.filterPages.actualOffSet - 20) + "&limit=20";
 
-                    filterObject.Pages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.Pages.actualOffSet + "&limit=20";
-                    filterObject.Pages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filterObject.Pages.actualOffSet + 20) + "&limit=20";
-                    filterObject.Pages.actualPage += 1;
-                    filterObject.Pages.nextPage +=  1;
-                    filterObject.Pages.prevPage -= 1;
+                    filterObject.filterPages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.filterPages.actualOffSet + "&limit=20";
+                    filterObject.filterPages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filterObject.filterPages.actualOffSet + 20) + "&limit=20";
+                    filterObject.filterPages.actualPage += 1;
+                    filterObject.filterPages.nextPage += 1;
+                    filterObject.filterPages.prevPage -= 1;
 
                 }
                 string jsonString = JsonConvert.SerializeObject(filterObject);
@@ -121,18 +121,18 @@ namespace PokeApi.BLL.Services
                 filter = GetUrlFromfilter(filter);
 
                 Filter filterObject = JsonConvert.DeserializeObject<Filter>(filter);
-                filterObject.Pages.actualPageUrl = GetUrlFromfilter(filter);
+                filterObject.filterPages.actualPageUrl = GetUrlFromfilter(filter);
 
 
-                if (filterObject.Pages.nextPageUrl == null && filterObject.Pages.offSet == null)
+                if (filterObject.filterPages.nextPageUrl == null && filterObject.filterPages.offSet == null)
                 {
-                    url = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.AlbumBase.pokemonStart + "&limit=20";
+                    url = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.albumBase.pokemonStart + "&limit=20";
                 }
                 else
                 {
-                    var offSet = 20 + filterObject.Pages.offSet;
+                    var offSet = 20 + filterObject.filterPages.offSet;
                     var limitPokemonPage = 20;
-                    url = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.AlbumBase.pokemonStart + "&limit=" + limitPokemonPage;
+                    url = "https://pokeapi.co/api/v2/pokemon?offset=" + filterObject.albumBase.pokemonStart + "&limit=" + limitPokemonPage;
 
                 }
 
@@ -152,26 +152,24 @@ namespace PokeApi.BLL.Services
             {
                 var url = "";
 
-                if (filter.Pages.nextPageUrl == null && filter.Pages.offSet == null)
+                if (filter.filterPages.nextPageUrl == null)
                 {
-                    filter.Pages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filter.AlbumBase.pokemonStart + "&limit=20";
-                    filter.Pages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filter.AlbumBase.pokemonStart + 20) + "&limit=20";
-                    filter.Pages.actualPage = 1;
-                    filter.Pages.nextPage = 2;
-                    filter.Pages.prevPage = 1;
-                    filter.Pages.offSet = 20;
+                    filter.filterPages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filter.filterPages.offSet + "&limit=" + filter.filterPages.limitPokemonPage;
+                    filter.filterPages.prevPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filter.filterPages.offSet + "&limit=" + filter.filterPages.limitPokemonPage;
+                    filter.filterPages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filter.filterPages.offSet + filter.filterPages.limitPokemonPage) + "&limit=" + filter.filterPages.limitPokemonPage;
+                    filter.filterPages.actualPage = 1;
+                    filter.filterPages.nextPage = 2;
+                    filter.filterPages.prevPage = 1;
+                    filter.filterPages.offSet = filter.filterPages.offSet;
                 }
-                //else
-                //{
-                //    filter.Pages.prevPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + 4 + "&limit=20";
+                else
+                {
+                    filter.filterPages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filter.filterPages.offSet + filter.filterPages.limitPokemonPage) + "&limit=" + filter.filterPages.limitPokemonPage;
+                    filter.filterPages.actualPage += 1;
+                    filter.filterPages.nextPage += 1;
+                    filter.filterPages.offSet = filter.filterPages.offSet + filter.filterPages.limitPokemonPage;
 
-                //    filter.Pages.actualPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + filter.Pages.actualOffSet + "&limit=20";
-                //    filter.Pages.nextPageUrl = "https://pokeapi.co/api/v2/pokemon?offset=" + (filter.Pages.actualOffSet + 20) + "&limit=20";
-                //    filter.Pages.actualPage += 1;
-                //    filter.Pages.nextPage += 1;
-                //    filter.Pages.prevPage -= 1;
-
-                //}
+                }
                 return filter;
             }
             catch (Exception ex)
@@ -180,5 +178,23 @@ namespace PokeApi.BLL.Services
                 throw;
             }
         }
+
+        public int GetRandomNumber(int id)
+        {
+            // Obtener la fecha y hora actual
+            DateTime fechaHoraActual = DateTime.Now;
+
+            // Combinar la fecha y hora actual con el ID de usuario
+            string combinedString = $"{fechaHoraActual.ToString("yyyyMMddHHmmss")}{id}";
+
+            // Calcular un hash para la cadena combinada
+            int hashCode = combinedString.GetHashCode();
+
+            // Asegurarse de que el hash sea positivo
+            int numeroRandom = Math.Abs(hashCode);
+
+            return numeroRandom;
+        }
+
     }
 }

@@ -4,13 +4,13 @@ using PokeApi.BLL.Services;
 using PokeApi.BLL.Services.Contract;
 using PikeApi.DTO;
 using PokeApi.API.Utility;
-using PokeApi.Model;
 using Newtonsoft.Json;
 using PokeApi.Model.PokeApiClasses;
 using System.Linq;
 using PokeApi.Model.Album;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using PokeApi.Model.Filter;
+using PokeApi.Model.Response;
 
 
 namespace PokeApi.API.Controllers
@@ -229,8 +229,8 @@ namespace PokeApi.API.Controllers
             {
                 ReturnPokemonApiResponseClass dataPokemon = await _pokeService.ListPokemonFromApiWithFilters(filter);
                 Filter filtro = _generalPokemonService.GetUrlFromfilter(filter);
-                rsp.next = filtro.Pages.nextPageUrl;
-                rsp.previous = filtro.Pages.prevPageUrl;
+                rsp.next = filtro.filterPages.nextPageUrl;
+                rsp.previous = filtro.filterPages.prevPageUrl;
                 rsp.results = dataPokemon.results;
             }
             catch (Exception ex)

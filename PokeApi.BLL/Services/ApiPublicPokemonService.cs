@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PokeApi.DAL.Repositorys.Contract;
 using PikeApi.DTO;
-using PokeApi.Model;
 using PokeApi.Model.PokeApiClasses;
 using PokeApi.BLL.Services.Contract;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Linq;
+using PokeApi.Model.Response;
 
 namespace PokeApi.BLL.Services
 {
@@ -214,6 +214,7 @@ namespace PokeApi.BLL.Services
                         var pokemonOrderConditional = "PokemonSecondEvolution";
                         pokemonReturned = await CreatePokemonByDataCollect(basePokemonData, pokemonFirstEvolution, pokemonSecondEvolution, pokemonOrderConditional);
                     }
+                    Console.WriteLine("Pokémon: " + pokemonReturned.name);
                     return pokemonReturned;
                 }
                 else

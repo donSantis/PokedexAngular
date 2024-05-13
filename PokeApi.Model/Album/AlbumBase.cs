@@ -13,11 +13,10 @@ namespace PokeApi.Model.Album
         public string? name { get; set; }
         public string? description { get; set; }
         public int? version { get; set; }
-        public int? state { get; set; }
+        public int? status { get; set; }
         public int? pokemonStart { get; set; }
         public int? pokemonEnd { get; set; }
         public string? image { get; set; }
-
         public string? url { get; set; }
         public DateTime? lastModification { get; set; }
         public DateTime? registerDate { get; set; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PokeApi.Model;
+using PokeApi.Model.PokeApiClasses;
 
 namespace PokeApi.DAL.Repositorys.Contract
 {

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PokeApi.DAL.Repositorys.Contract;
 using PikeApi.DTO;
-using PokeApi.Model;
 using PokeApi.BLL.Services.Contract;
+using PokeApi.Model.PokeApiClasses;
 
 namespace PokeApi.BLL.Services
 {

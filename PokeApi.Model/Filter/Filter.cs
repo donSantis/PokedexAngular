@@ -11,9 +11,11 @@ namespace PokeApi.Model.Filter
     public partial class Filter
     {
         public string? name { get; set; }
-        public AlbumBase? AlbumBase { get; set; }
-        public FilterPages? Pages { get; set; }
+        public AlbumBase? albumBase { get; set; }
+        public FilterPages? filterPages { get; set; }
         public User? user{ get; set; }
-        public Stickers? Sticker { get; set; }
+        public FilterStickers? filterSticker { get; set; }
+        public FilterUser? filterUser { get; set; }
+        public FilterExchange? filterExchange { get; set; }
     }
 }

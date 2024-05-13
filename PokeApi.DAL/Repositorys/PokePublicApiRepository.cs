@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PokeApi.DAL.DBContext;
 using PokeApi.DAL.Repositorys.Contract;
-using PokeApi.Model;
 using PokeApi.Model.Filter;
+using PokeApi.Model.PokeApiClasses;
 
 namespace PokeApi.DAL.Repositorys
 {
@@ -59,7 +59,7 @@ namespace PokeApi.DAL.Repositorys
                 // Construye el paginador que utiliza la api de pokeapi
 
 
-                HttpResponseMessage response = await _httpClient.GetAsync(filterObject.Pages.actualPageUrl);
+                HttpResponseMessage response = await _httpClient.GetAsync(filterObject.filterPages.actualPageUrl);
                 response.EnsureSuccessStatusCode();
 
                 // Lee el contenido de la respuesta como una cadena
@@ -84,7 +84,7 @@ namespace PokeApi.DAL.Repositorys
                 // Construye el paginador que utiliza la api de pokeapi
 
 
-                HttpResponseMessage response = await _httpClient.GetAsync(filter.Pages.actualPageUrl);
+                HttpResponseMessage response = await _httpClient.GetAsync(filter.filterPages.actualPageUrl);
                 response.EnsureSuccessStatusCode();
 
                 // Lee el contenido de la respuesta como una cadena

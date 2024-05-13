@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PokeApi.DAL.DBContext;
 using PokeApi.DAL.Repositorys.Contract;
-using PokeApi.Model;
+using PokeApi.Model.PokeApiClasses;
 
 namespace PokeApi.DAL.Repositorys
 {
